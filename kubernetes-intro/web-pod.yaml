@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: web
+  labels:
+    web: "true"
+    nginx: "true"
+    port: "8000"
+    type: "homework"
+    user: "gagafonov"
+spec:
+  containers:
+  - name: web
+    image: "gagafonov/kubernetes-intro-web:latest"
+    imagePullPolicy: IfNotPresent
+    volumeMounts:
+    - name: app
+      mountPath: /app
+  initContainers:
+  - name: init
+    image: busybox:1.36.0
+    command: ['sh', '-c', 'wget -O- https://tinyurl.com/otus-k8s-intro | sh']
+    volumeMounts:
+    - name: app
+      mountPath: /app
+  volumes:
+  - name: app
+    emptyDir: {}
